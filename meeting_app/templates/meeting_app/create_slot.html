@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+      <link rel="stylesheet" href="{% static 'meeting_app/css/login_signup.css' %}">
+    
+    <title>Create Slot | Meeting Scheduler</title>
+</head>
+<body>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<style>
+  .swal-button:not([disabled]):hover {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+
+  .swal-button {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+</style>
+
+{% if messages %}
+    {% for message in messages %}
+        <script> swal({
+            title: "{{ message }}",
+            icon: "info",
+            button: "Okay",
+          });
+        </script>
+
+    {% endfor %}
+
+{% endif %}
+<header>
+    <h1 id="nav-title" onclick="window.location.href = '/login/'">Meeting Scheduler</h1>
+    <nav>
+        <ul>
+            <li><p>{{ request.user.profile.name }}</p></li>
+            {% if not request.user.profile.is_google_acc_linked %}
+                <li><button onclick="window.location.href = '{{ google_oauth_url }}'">Link Google Calendar</button></li>
+            
+            {% endif %}
+            <li><button onclick="window.location.href = '/availability/'">Availability</button></li>
+            <li><button onclick="window.location.href = '/links/'">Appointment Links</button></li>
+            <li><button onclick="window.location.href = '/logout/'">Log out</button></li>
+        </ul>
+    </nav>
+</header>
+    
+    <div class="container1" style="width: auto;">
+        <div class="tlogo">
+            <img class="logo" src="{% static 'meeting_app/img/logo.png' %}"  alt="">
+        </div>
+        <h1 class="titles"> Create An Available Slot</h1>
+        <form action="/add_availability/" method="post">
+            {% csrf_token %}
+            <label for="start_time" style="float:left ;">Available From</label>
+            <input  type="datetime-local" name="start_time" id="start_time"  required>
+            <br>
+            <label for="end_time" style="float:left ;">Available till</label>
+            <input  type="datetime-local" name="end_time" id="end_time" placeholder="Title" required>
+            <br><br>         
+            <input type="submit" value="Create" >
+        </form>
+    </div>
+
+</body>
+</html>

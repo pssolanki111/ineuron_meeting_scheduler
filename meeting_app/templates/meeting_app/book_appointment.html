@@ -1,0 +1,94 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+      <link rel="stylesheet" href="{% static 'meeting_app/css/login_signup.css' %}">
+    
+    <title>Book Appointment | Meeting Scheduler</title>
+</head>
+<body>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<style>
+  .swal-button:not([disabled]):hover {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+
+  .swal-button {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+</style>
+
+{% if messages %}
+    {% for message in messages %}
+        <script> swal({
+            title: "{{ message }}",
+            icon: "info",
+            button: "Okay",
+          });
+        </script>
+
+    {% endfor %}
+
+{% endif %}
+
+<header>
+    <h1 id="nav-title" onclick="window.location.href = '/login/'">Meeting Scheduler</h1>
+    <nav>
+        <ul>
+            <li><p>{{ request.user.profile.name }}</p></li>
+            {% if not request.user.profile.is_google_acc_linked %}
+                <li><button onclick="window.location.href = '{{ google_oauth_url }}'">Link Google Calendar</button></li>
+            
+            {% endif %}
+            <li><button onclick="window.location.href = '/availability/'">Availability</button></li>
+            <li><button onclick="window.location.href = '/links/'">Appointment Links</button></li>
+            <li><button onclick="window.location.href = '/logout/'">Log out</button></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container1" style="width:auto;">
+        <div class="tlogo">
+            <img class="logo" src="{% static 'meeting_app/img/logo.png' %}"  alt="">
+        </div>
+        <h1 class="titles">Book Appointment with {{ book_with }}</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+        
+            <input  type="text" name="name" id="name" value="{{ request.user.profile.name }}" >
+            <br><br>
+            <input  type="email" name="email" id="email" value="{{ request.user.email }}" >
+            <br><br>
+            <input  type="text" name="title" id="title" value="{{ title }}" >
+            <br><br>
+            <textarea id="description" name="description" rows="4" cols="38">{{ description }}</textarea>
+            <br>
+                <strong>Select Appointment Slot to Book:</strong>
+              <select id="multiple-checkboxes" name="selected_slots_list" required>
+                  
+                  {% for slot in slots %}
+                    <option value="{{ slot.start_dt }}&&{{ slot.end_dt }}">{{ slot }}</option>
+                  {% endfor %}
+                  
+              </select>
+        <br> <br>
+          
+            <input type="submit" value="Book Now" >
+        </form>
+    </div>
+
+</body>
+</html>

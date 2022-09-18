@@ -1,0 +1,62 @@
+{% extends "auth/base_template.html" %}
+{% load static %}
+
+{% block head %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'meeting_app/css/login_signup.css' %}">
+  <title>Login | Meeting Scheduler</title>
+
+</head>
+
+{% endblock head %}
+
+{% block content %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<style>
+  .swal-button:not([disabled]):hover {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+
+  .swal-button {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+</style>
+
+{% if messages %}
+    {% for message in messages %}
+        <script> swal({
+            title: "{{ message }}",
+            icon: "info",
+            button: "Okay",
+          });
+        </script>
+
+    {% endfor %}
+
+{% endif %}
+
+<div class="container1">
+        <div class="tlogo">
+            <img class="logo" src="{% static 'meeting_app/img/logo.png' %}"  alt="">
+        </div>
+        <h1 class="titles"> Meeting Scheduler</h1>
+        <form action="/login/" method="post" id="login_form">
+            {% csrf_token %}          
+            <input  type="text" name="u-id" id="username" placeholder="Username" required>
+            <br>
+            <input  type="password" name="u-pwd" id="password" placeholder="Password" required>
+            <br> 
+            <input type="submit" value="Log in" form="login_form">
+            <p class="logp">
+            <a href="/reset_password/">Forgot Password</a> <br> Don't have an account? &nbsp;<a href="/signup/">Sign Up</a>
+        </p>
+        </form>
+    </div>
+
+{% endblock content %}

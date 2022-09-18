@@ -1,0 +1,9 @@
+Django
+psycopg2
+pytz
+gunicorn
+gevent
+python-dateutil
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib

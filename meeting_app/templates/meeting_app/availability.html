@@ -1,0 +1,156 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Availability | Meeting Scheduler</title>
+    <link rel="stylesheet" href="{% static 'meeting_app/css/login_signup.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous">
+      
+    </script>
+</head>
+
+<style>
+    .container{
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    h1{
+        text-align: center;
+    }
+    .main-container{
+        background-color: #fff;
+        max-width: 800px;
+    }
+.main_box{
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.07);
+    
+}
+.main_box p{
+    font-size: 20px;
+    font-weight:100;
+}
+.main_box:hover{
+    background-color: rgba(199, 199, 199, 0.811);
+}
+
+div.scroll {
+                margin:4px, 4px;
+                padding:4px;
+                background-color: rgb(255, 255, 255);
+                min-height: 300px;
+                max-height: 600px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                text-align:justify;
+                border: 1px outset rgba(94, 94, 94, 0.372);
+               border-radius: 8px;
+            }
+
+    div::-webkit-scrollbar {
+    
+	
+	width: 3px;
+    height: 8px;
+	background: #F5F5F5;
+	overflow-y: scroll;
+	
+  }
+  
+  div::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+    
+}
+  
+   
+  div::-webkit-scrollbar-thumb {
+    background-color: #333;	
+}
+ </style>
+
+<body>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<style>
+  .swal-button:not([disabled]):hover {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+
+  .swal-button {
+    background-color: #39b346;
+    color: '#38712F'
+  }
+</style>
+
+{% if messages %}
+    {% for message in messages %}
+        <script> swal({
+            title: "{{ message }}",
+            icon: "info",
+            button: "Okay",
+          });
+        </script>
+
+    {% endfor %}
+
+{% endif %}
+
+<header>
+    <h1 id="nav-title" onclick="window.location.href = '/login/'">Meeting Scheduler</h1>
+    <nav>
+        <ul>
+            <li><p>{{ request.user.profile.name }}</p></li>
+            {% if not request.user.profile.is_google_acc_linked %}
+                <li><button onclick="window.location.href = '{{ google_oauth_url }}'">Link Google Calendar</button></li>
+            
+            {% endif %}
+            <li><button onclick="window.location.href = '/availability/'">Availability</button></li>
+            <li><button onclick="window.location.href = '/links/'">Your Links</button></li>
+            <li><button onclick="window.location.href = '/logout/'">Log out</button></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container-fluid main-container">
+        <h1>Available Slots for Meeting</h1>
+        <button id="add" 
+                style="float: right; border: 1px solid #333; background-color: #fff; border-radius: 5px; margin-right: 10px; width: 70px;" onclick="window.location.href = '/add_availability/'">Add</button>
+        <br>
+        <br>
+        <div class="scroll">
+        <div class="container main_box mb-3">
+                <p style="float: left; font: bolder;">Slots</p>     <p style="font: bolder; color: green;  ">Action</p>
+       </div>
+   
+        {% if available_slots|length == 0 %}
+            <div class="container main_box mb-3">
+                <p>You do not have any available slots</p>
+            </div>
+        
+        {% else %}
+            {% for slot in available_slots %}
+            
+            <div class="container main_box mb-3">
+                 <p>{{ slot.start_time }} - {{ slot.end_time }}</p>  <p onclick="window.location.href = '/remove_availability/{{ slot.id }}'"
+                    style="font: bolder; color: red;  float: right; " class="delete_slot">Delete</p>
+             </div>
+            
+            {% endfor %}
+            
+        {% endif %}
+                 
+    </div>
+</div>
+
+</body>
+</html>

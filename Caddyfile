@@ -1,0 +1,10 @@
+ineuron.pssolanki.com {
+	handle_path /static/* {
+		root * /usr/local/static/ineuron_web
+		file_server
+	}
+	
+	handle {
+		reverse_proxy 127.0.0.1:8000
+	}
+}
